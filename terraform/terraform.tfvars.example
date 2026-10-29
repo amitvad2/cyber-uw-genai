@@ -1,0 +1,7 @@
+project_id   = "bt-mvp-dev-eu"
+region       = "europe-west2"
+firestore_db = "uw-demo"
+gen_model    = "gemini-3.5-flash"
+emb_model    = "text-embedding-005"
+# image_tag  = "latest"   # CI overrides with the git SHA
+# build_image = true       # CI sets false

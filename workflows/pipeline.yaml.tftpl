@@ -1,0 +1,34 @@
+main:
+  params: [event]
+  steps:
+    - init:
+        assign:
+          - bucket: $${event.data.bucket}
+          - name: $${event.data.name}
+    - extract:
+        call: http.post
+        args:
+          url: ${extract_url}
+          auth: {type: OIDC}
+          body:
+            bucket: $${bucket}
+            name: $${name}
+        result: ex
+    - index:
+        call: http.post
+        args:
+          url: ${index_url}
+          auth: {type: OIDC}
+          body:
+            submission_id: $${ex.body.submission_id}
+        result: ix
+    - evaluate:
+        call: http.post
+        args:
+          url: ${evaluate_url}
+          auth: {type: OIDC}
+          body:
+            submission_id: $${ex.body.submission_id}
+        result: ev
+    - finish:
+        return: $${ev.body}

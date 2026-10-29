@@ -1,0 +1,45 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  id-token: write   # required for Workload Identity Federation
+
+env:
+  PROJECT_ID: bt-mvp-dev-eu
+  REGION: europe-west2
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        name: Authenticate to GCP (keyless, WIF)
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.CI_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Build & push image (Cloud Build)
+        run: |
+          gcloud builds submit service \
+            --tag "${REGION}-docker.pkg.dev/${PROJECT_ID}/uw-pipeline/uw-service:${GITHUB_SHA}" \
+            --project "${PROJECT_ID}"
+
+      - name: Terraform apply
+        working-directory: terraform
+        run: |
+          terraform init
+          terraform apply -auto-approve \
+            -var="image_tag=${GITHUB_SHA}" \
+            -var="build_image=false" \
+            -var="github_repo=${GITHUB_REPOSITORY}"

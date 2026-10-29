@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+google-genai
+google-cloud-firestore
+google-cloud-storage
+pypdf
+numpy
+google-adk

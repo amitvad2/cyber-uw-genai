@@ -38,7 +38,7 @@ def run_specialist(submission_id: str, domain: str, guideline: str, seed_query: 
                 seen.add(key); gathered.append(h)
 
         # OBSERVE + REASON: is what we have enough for this (possibly multi-part) rule?
-        evidence = "\n".join(f"- (p.{h['page']}) {h['text'][:300]}" for h in gathered)
+        evidence = "\n".join(f"- (p.{h['page']}) {h['text'][:1200]}" for h in gathered)
         decision = _ask_json(f"""You are the {domain} control specialist for a cyber underwriter.
 GUIDELINE (may have several parts):
 {guideline}
@@ -59,7 +59,7 @@ different, more specific query. Reply ONLY with JSON:
         query = decision["next_query"]  # REASON drives the next ACT
 
     # Conclude from everything gathered
-    evidence = "\n".join(f"[{i+1}] (p.{h['page']}) {h['text'][:300]}"
+    evidence = "\n".join(f"[{i+1}] (p.{h['page']}) {h['text'][:1200]}"
                          for i, h in enumerate(gathered))
     final = common.genai_client.models.generate_content(
         model=common.GEN_MODEL,

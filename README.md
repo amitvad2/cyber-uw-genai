@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Cyber Underwriting GenAI — Event-Driven RAG on GCP (Terraform + GitHub Actions)
 
 A hardened, event-driven Retrieval-Augmented Generation pipeline that triages cyber
@@ -173,7 +172,3 @@ gcloud storage cp rich_submission.pdf gs://bt-mvp-dev-eu-uw-intake/
   open-ended reasoning over scattered evidence pays off. Extract and index stay
   deterministic. Single-part rules don't need a loop — don't pay for one where a single
   pass suffices.
-=======
-# cyber-uw-genai
-Repo for UW Cyber specialist GenAI Assistant
->>>>>>> 3b24aed9ce66d2531c250f3acc2aa6a39c9acda1
